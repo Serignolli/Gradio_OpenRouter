@@ -1,40 +1,44 @@
 import gradio as gr
 from OpenRouter import reviewCode
 
-# Function to process the input code based on language selection
 def codeReviewerUI(code, language):
-    return reviewCode(code, language)  # Modify reviewCode to handle different languages
+    try:
+        return reviewCode(code, language)
+    except Exception as e:
+        return f"**Erro:** {str(e)}"
 
+LANGUAGES = ["python", "c", "cpp", "markdown", "json", "html", "css",
+             "javascript", "jinja2", "typescript", "yaml", "dockerfile",
+             "shell", "r", "sql", "sql-msSQL", "sql-mySQL", "sql-mariaDB",
+             "sql-sqlite", "sql-cassandra", "sql-plSQL"]
 
-# Available languages for selection
-LANGUAGES = [
-    "python", "javascript", "java", "c", "c++", "csharp", "go", "rust",
-    "ruby", "swift", "kotlin", "typescript", "php"
-]
-
-# Gradio Interface
 with gr.Blocks() as interface:
-    gr.Markdown("# AI Code Reviewer & Explainer")
-    gr.Markdown("Paste your code and get an AI-powered explanation, feedback, and suggestions for improvement.")
+    gr.Markdown("""
+    # AI Code Reviewer & Explainer
+    **Paste your code and get an AI-powered explanation, feedback, and suggestions for improvement.**
+    """, elem_id="title")
 
     with gr.Row():
         language_dropdown = gr.Dropdown(
             choices=LANGUAGES, value="python", label="Choose the Programming Language"
         )
 
-    code_input = gr.Code(language="python", lines=20, label="Paste your code here")
-    explanation_output = gr.Textbox(label="AI Analysis & Suggestions", lines=10)
+    with gr.Row():
+        code_input = gr.Code(language="python", lines=20, label="Paste your code here")
+        explanation_output = gr.Markdown(value="AI Analysis & Suggestions", min_height=50)
 
-    submit_button = gr.Button("Analyze Code")
+    with gr.Row():
+        submit_button = gr.Button("Analyze Code", variant="primary")
+        clear_button = gr.Button("Clear")
 
-
-    # Update the code input component dynamically when language changes
     def update_code_language(language):
         return gr.update(language=language)
 
+    def clear_fields():
+        return "", ""
 
     language_dropdown.change(update_code_language, inputs=[language_dropdown], outputs=[code_input])
-
     submit_button.click(codeReviewerUI, inputs=[code_input, language_dropdown], outputs=[explanation_output])
+    clear_button.click(clear_fields, inputs=[], outputs=[code_input, explanation_output])
 
 interface.launch(share=True)
