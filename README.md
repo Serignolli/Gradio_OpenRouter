@@ -16,8 +16,8 @@ Este projeto utiliza a API do OpenRouter para criar um chatbot especializado em 
 
 ## 📂 Estrutura do Projeto
 ```
-📁 openrouter-code-reviewer
-├── 📄 Gradio.py    # Código principal
+📁 Gradio_OpenRouter
+├── 📄 Gradio.py        # Código principal
 ├── 📄 OpenRouter.py    # Conexão OpenROuter
 ├── 📄 requirements.txt # Dependências do projeto
 ├── 📄 README.md        # Documentação
