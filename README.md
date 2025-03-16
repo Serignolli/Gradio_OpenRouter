@@ -35,7 +35,7 @@ pip install -r requirements.txt
 ```
 ### 3️⃣ Rodar o Servidor Gradio
 ```bash
-python Gradio.py
+uvicorn Gradio:app --reload
 ```
 A aplicação estará disponível em `http://127.0.0.1:7860/`
 
