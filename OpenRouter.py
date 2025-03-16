@@ -1,7 +1,11 @@
 import requests
-import json
+import os
 
-API_KEY = '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'
+API_KEY = os.getenv("OPENROUTER_API_KEY")
+
+if not API_KEY:
+    raise ValueError("A chave da API não foi encontrada. Configure a variável de ambiente OPENROUTER_API_KEY.")
+
 API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
 HEADERS = {
