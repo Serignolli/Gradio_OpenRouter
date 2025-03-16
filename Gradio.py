@@ -1,12 +1,18 @@
 import gradio as gr
 from OpenRouter import reviewCode
 import os
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.responses import RedirectResponse
+
+app = FastAPI()
 
 def codeReviewerUI(code, language):
     try:
         return reviewCode(code, language)
     except Exception as e:
         return f"**Erro:** {str(e)}"
+
 
 LANGUAGES = ["python", "c", "cpp", "markdown", "json", "html", "css",
              "javascript", "jinja2", "typescript", "yaml", "dockerfile",
@@ -32,11 +38,14 @@ with gr.Blocks() as interface:
         submit_button = gr.Button("Analyze Code", variant="primary")
         clear_button = gr.Button("Clear")
 
+
     def update_code_language(language):
         return gr.update(language=language)
 
+
     def clear_fields():
         return "", ""
+
 
     language_dropdown.change(update_code_language, inputs=[language_dropdown], outputs=[code_input])
     submit_button.click(codeReviewerUI, inputs=[code_input, language_dropdown], outputs=[explanation_output])
@@ -45,4 +54,13 @@ with gr.Blocks() as interface:
 
 PORT = int(os.getenv("PORT", 7860))
 
-interface.launch(server_name="0.0.0.0", server_port=PORT)
+@app.get("/")
+async def root():
+    return RedirectResponse(url="/gradio")
+
+@app.get("/ads.txt")
+async def ads():
+    return FileResponse("ads.txt")
+
+# Integrando Gradio ao FastAPI
+app = gr.mount_gradio_app(app, interface, path="/gradio")
