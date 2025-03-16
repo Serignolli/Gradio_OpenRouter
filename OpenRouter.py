@@ -1,5 +1,8 @@
 import requests
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 API_KEY = os.getenv("OPENROUTER_API_KEY")
 
@@ -11,8 +14,8 @@ API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 HEADERS = {
     'Authorization': f'Bearer {API_KEY}',
     'Content-Type': 'application/json',
-    #'HTTP-Referer': '<YOUR_SITE_URL>',
-    #'X-Title': '<YOUR_SITE_NAME>',
+    'HTTP-Referer': 'https://ai-code-reviewer-and-explainer.onrender.com',
+    'X-Title': 'AI Code Reviewer & Explainer',
 }
 def getModelResponse(prompt):
     data = {
@@ -40,4 +43,3 @@ def reviewCode(codeSnippet, language):
         "Identify potential bugs or improvements, suggest optimizations, and provide alternative implementations if applicable."
     )
     return getModelResponse(prompt)
-
