@@ -1,5 +1,6 @@
 import gradio as gr
 from OpenRouter import reviewCode
+import os
 
 def codeReviewerUI(code, language):
     try:
@@ -41,4 +42,7 @@ with gr.Blocks() as interface:
     submit_button.click(codeReviewerUI, inputs=[code_input, language_dropdown], outputs=[explanation_output])
     clear_button.click(clear_fields, inputs=[], outputs=[code_input, explanation_output])
 
-interface.launch(share=True)
+
+PORT = int(os.getenv("PORT", 7860))
+
+interface.launch(server_name="0.0.0.0", server_port=PORT)
